@@ -1,0 +1,10 @@
+{
+  "name": "Converto.ai",
+  "description": "AI-powered landing page generator for high-converting e-commerce assets from a single product image.",
+  "requestFramePermissions": [
+    "camera"
+  ],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

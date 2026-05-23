@@ -1,0 +1,26 @@
+{
+  "entities": {
+    "LandingPage": {
+      "title": "LandingPage",
+      "description": "Defines an e-commerce high-converting landing page generated and customized by the user.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string", "description": "The firebase auth user ID of the owner of this page" },
+        "productName": { "type": "string", "description": "The name of the custom product" },
+        "niche": { "type": "string", "description": "The niche template structure e.g. luxury, beauty, tech, streetwear, minimal, educational, fitness" },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Created at timestamp" },
+        "updatedAt": { "type": "string", "format": "date-time", "description": "Updated at timestamp" },
+        "pageData": { "type": "object", "description": "The detailed structured JSON page data containing features, benefits, faq, hero, guarantee, config, etc." },
+        "image": { "type": "string", "description": "Base64 or URL profile image representing the product" },
+        "isPublished": { "type": "boolean", "description": "Whether the landing page is publicly accessible/published" }
+      },
+      "required": ["userId", "productName", "niche", "pageData", "createdAt", "updatedAt"]
+    }
+  },
+  "firestore": {
+    "landingPages/{pageId}": {
+      "schema": "LandingPage",
+      "description": "Store user custom generated and tailored-made landing pages and funnels."
+    }
+  }
+}

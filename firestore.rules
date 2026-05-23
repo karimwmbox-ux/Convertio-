@@ -1,0 +1,89 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // 1. Global Safety Net (Default-Deny Catch-All)
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // --- GLOBAL REUSABLE PRIMITIVES ---
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isVerifiedUser() {
+      return isSignedIn() && (
+        request.auth.token.email_verified == true || 
+        request.auth.token.firebase.sign_in_provider == 'anonymous'
+      );
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    // --- VALIDATION BLUEPRINTS ---
+    function isValidLandingPage(data) {
+      return (
+        data.userId == request.auth.uid &&
+        data.productName is string && 
+        data.productName.size() > 0 && 
+        data.productName.size() <= 200 &&
+        data.niche is string && 
+        data.niche.size() > 0 && 
+        data.niche.size() <= 100 &&
+        data.pageData is map &&
+        (!('image' in data) || (data.image is string && data.image.size() <= 15000000)) &&
+        (!('isPublished' in data) || data.isPublished is bool) &&
+        data.keys().hasAll(['userId', 'productName', 'niche', 'pageData', 'createdAt', 'updatedAt']) &&
+        data.keys().size() <= 8
+      );
+    }
+
+    // --- LANDING PAGES MATCH GROUP ---
+    match /landingPages/{pageId} {
+      // Direct get is allowed if owner, OR if the page is explicitly published
+      allow get: if isValidId(pageId) && (
+        (isSignedIn() && existing().userId == request.auth.uid) || 
+        (existing().isPublished == true)
+      );
+
+      // Query listings are strictly owner-restricted to avoid data leakage (secure lists)
+      allow list: if isSignedIn() && existing().userId == request.auth.uid;
+
+      // Creation gates: verified authentication, valid ID, correct payload, matching userId & server time
+      allow create: if isValidId(pageId) && 
+                    isVerifiedUser() && 
+                    isValidLandingPage(incoming()) &&
+                    incoming().createdAt == request.time &&
+                    incoming().updatedAt == request.time;
+
+      // Update gates: owner identity validation, immutable keys check, and server timer sync
+      allow update: if isValidId(pageId) && 
+                    isVerifiedUser() && 
+                    existing().userId == request.auth.uid &&
+                    isValidLandingPage(incoming()) &&
+                    incoming().userId == existing().userId &&
+                    incoming().createdAt == existing().createdAt &&
+                    incoming().updatedAt == request.time;
+
+      // Delete gates: owner validation only
+      allow delete: if isValidId(pageId) && 
+                    isSignedIn() && 
+                    existing().userId == request.auth.uid;
+    }
+  }
+}
