@@ -77,3 +77,56 @@ export interface AnalysisResult {
   targetAudience: string;
   suggestedStructure: MarketingStructure;
 }
+
+/**
+ * Meta Ads Platform Types
+ */
+
+export interface AdMetrics {
+  impressions: number;
+  clicks: number;
+  ctr: number;
+  spend: number;
+  conversions: number;
+  roas: number;
+  cpc: number;
+}
+
+export interface OptimizationSuggestion {
+  id: string;
+  type: 'creative' | 'targeting' | 'budget';
+  title: string;
+  description: string;
+  impact: 'high' | 'medium' | 'low';
+}
+
+export interface MetaAd {
+  id: string;
+  name: string;
+  headline: string;
+  body: string;
+  cta: string;
+  imageUrl: string;
+  status: 'ACTIVE' | 'PAUSED' | 'ARCHIVED';
+  metrics: AdMetrics;
+}
+
+export interface MetaAdSet {
+  id: string;
+  name: string;
+  targetAudience: string;
+  budget: number;
+  status: 'ACTIVE' | 'PAUSED' | 'ARCHIVED';
+  ads: MetaAd[];
+  metrics: AdMetrics;
+}
+
+export interface MetaCampaign {
+  id: string;
+  name: string;
+  objective: 'CONVERSIONS' | 'TRAFFIC' | 'AWARENESS';
+  status: 'ACTIVE' | 'PAUSED' | 'ARCHIVED';
+  adSets: MetaAdSet[];
+  metrics: AdMetrics;
+  suggestions: OptimizationSuggestion[];
+}

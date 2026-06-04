@@ -4,10 +4,11 @@ import {
   Upload, Sparkles, Wand2, X, Eye, Code, Download, Languages, 
   ChevronRight, LayoutTemplate, Palette, Sliders, RefreshCw, 
   FileCode, Play, Layers, BadgeAlert, CheckCircle2, Cpu,
-  Cloud, Database, LogIn, LogOut, Trash2
+  Cloud, Database, LogIn, LogOut, Trash2, Megaphone
 } from 'lucide-react';
 import { LandingPageData, AnalysisResult, Niche } from './types';
 import { LandingRenderer } from './components/LandingRenderer';
+import { AdsDashboard } from './components/AdsDashboard';
 import { SAMPLE_PRESETS, SamplePreset } from './mockData';
 import { cn } from './lib/utils';
 import confetti from 'canvas-confetti';
@@ -38,7 +39,7 @@ import {
   getDoc
 } from 'firebase/firestore';
 
-type ViewMode = 'dashboard' | 'preview' | 'code';
+type ViewMode = 'dashboard' | 'preview' | 'code' | 'ads';
 
 // Pre-defined local copy engines matching niches perfectly with professional high-converting structures
 const LOCAL_NICHE_TEMPLATES: Record<Niche, {
@@ -903,7 +904,7 @@ export default function App() {
           </div>
           
           <div className="hidden md:flex items-center gap-1 p-1 rounded-full bg-white/5 border border-white/10">
-            {(['dashboard', 'preview', 'code'] as ViewMode[]).map((mode) => (
+            {(['dashboard', 'preview', 'code', 'ads'] as ViewMode[]).map((mode) => (
               <button
                 id={`tab-${mode}`}
                 key={mode}
@@ -918,6 +919,7 @@ export default function App() {
                 {mode === 'dashboard' && <Sliders className="w-3 h-3" />}
                 {mode === 'preview' && <Eye className="w-3 h-3" />}
                 {mode === 'code' && <FileCode className="w-3 h-3" />}
+                {mode === 'ads' && <Megaphone className="w-3 h-3" />}
                 {mode}
               </button>
             ))}
@@ -1029,6 +1031,7 @@ export default function App() {
       )}
 
       <main className="pt-24 min-h-screen">
+        {viewMode === 'ads' && <AdsDashboard />}
         {viewMode === 'dashboard' && (
           <div className="max-w-7xl mx-auto px-6 py-6 animate-fade-in">
             {/* Header branding */}
