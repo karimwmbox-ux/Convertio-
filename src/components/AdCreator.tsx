@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { MetaAd } from '../types';
 import { AdPreview } from './AdPreview';
-import { Wand2, Image as ImageIcon, Layout, Type } from 'lucide-react';
+import { Wand2, Image as ImageIcon, Layout, Type, Loader2 } from 'lucide-react';
 
 interface Props {
   onSave: (ad: Partial<MetaAd>) => void;
@@ -16,6 +16,7 @@ export const AdCreator: React.FC<Props> = ({ onSave, initialData }) => {
     cta: 'Learn More',
     imageUrl: ''
   });
+  const [isGenerating, setIsGenerating] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -23,12 +24,16 @@ export const AdCreator: React.FC<Props> = ({ onSave, initialData }) => {
   };
 
   const handleGenerateCopy = () => {
-    // Simulating AI generation
-    setAd(prev => ({
-      ...prev,
-      headline: "The Future of Professional Gear.",
-      body: "Experience unmatched quality and design. Our latest collection is engineered for those who demand excellence in every detail. Limited stock available."
-    }));
+    setIsGenerating(true);
+    // Simulating AI generation with a slight delay for better UX
+    setTimeout(() => {
+      setAd(prev => ({
+        ...prev,
+        headline: "The Future of Professional Gear.",
+        body: "Experience unmatched quality and design. Our latest collection is engineered for those who demand excellence in every detail. Limited stock available."
+      }));
+      setIsGenerating(false);
+    }, 1200);
   };
 
   return (
@@ -37,61 +42,71 @@ export const AdCreator: React.FC<Props> = ({ onSave, initialData }) => {
       <div className="space-y-6 bg-zinc-950/60 p-8 rounded-3xl border border-white/5">
         <div className="flex items-center justify-between mb-2">
           <h3 className="font-bold text-emerald-400 uppercase tracking-wider text-sm flex items-center gap-2">
-            <Layout className="w-4 h-4" /> Ad Creative Settings
+            <Layout className="w-4 h-4" aria-hidden="true" /> Ad Creative Settings
           </h3>
           <button
             onClick={handleGenerateCopy}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-[10px] font-bold text-indigo-400 hover:bg-indigo-500/20 transition-all"
+            disabled={isGenerating}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-[10px] font-bold text-indigo-400 hover:bg-indigo-500/20 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            <Wand2 className="w-3 h-3" /> Magic Generate
+            {isGenerating ? (
+              <Loader2 className="w-3 h-3 animate-spin" />
+            ) : (
+              <Wand2 className="w-3 h-3" />
+            )}
+            {isGenerating ? 'Generating...' : 'Magic Generate'}
           </button>
         </div>
 
         <div className="space-y-4">
           <div>
-            <label className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block mb-1.5">Ad Name</label>
+            <label htmlFor="ad-name" className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block mb-1.5">Ad Name</label>
             <input
+              id="ad-name"
               name="name"
               value={ad.name}
               onChange={handleChange}
-              className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-sm text-white focus:border-emerald-500 focus:outline-none"
+              className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-sm text-white focus:border-emerald-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/20"
               placeholder="e.g. Summer Launch - V1"
             />
           </div>
 
           <div>
-            <label className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block mb-1.5 flex items-center gap-1.5">
-              <Type className="w-3 h-3" /> Primary Text (Body)
+            <label htmlFor="ad-body" className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block mb-1.5 flex items-center gap-1.5">
+              <Type className="w-3 h-3" aria-hidden="true" /> Primary Text (Body)
             </label>
             <textarea
+              id="ad-body"
               name="body"
               rows={4}
               value={ad.body}
               onChange={handleChange}
-              className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-sm text-white focus:border-emerald-500 focus:outline-none resize-none"
+              className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-sm text-white focus:border-emerald-500 focus:outline-none resize-none focus-visible:ring-2 focus-visible:ring-emerald-500/20"
               placeholder="Tell people what your ad is about..."
             />
           </div>
 
           <div>
-            <label className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block mb-1.5">Headline</label>
+            <label htmlFor="ad-headline" className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block mb-1.5">Headline</label>
             <input
+              id="ad-headline"
               name="headline"
               value={ad.headline}
               onChange={handleChange}
-              className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-sm text-white focus:border-emerald-500 focus:outline-none"
+              className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-sm text-white focus:border-emerald-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/20"
               placeholder="Catchy headline"
             />
           </div>
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block mb-1.5">Call to Action</label>
+              <label htmlFor="ad-cta" className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block mb-1.5">Call to Action</label>
               <select
+                id="ad-cta"
                 name="cta"
                 value={ad.cta}
                 onChange={handleChange}
-                className="w-full bg-zinc-900 border border-white/10 rounded-xl p-3 text-sm text-white focus:border-emerald-500 focus:outline-none cursor-pointer"
+                className="w-full bg-zinc-900 border border-white/10 rounded-xl p-3 text-sm text-white focus:border-emerald-500 focus:outline-none cursor-pointer focus-visible:ring-2 focus-visible:ring-emerald-500/20"
               >
                 <option value="Learn More">Learn More</option>
                 <option value="Shop Now">Shop Now</option>
@@ -100,14 +115,15 @@ export const AdCreator: React.FC<Props> = ({ onSave, initialData }) => {
               </select>
             </div>
             <div>
-              <label className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block mb-1.5 flex items-center gap-1.5">
-                <ImageIcon className="w-3 h-3" /> Image URL
+              <label htmlFor="ad-imageUrl" className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block mb-1.5 flex items-center gap-1.5">
+                <ImageIcon className="w-3 h-3" aria-hidden="true" /> Image URL
               </label>
               <input
+                id="ad-imageUrl"
                 name="imageUrl"
                 value={ad.imageUrl}
                 onChange={handleChange}
-                className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-sm text-white focus:border-emerald-500 focus:outline-none"
+                className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-sm text-white focus:border-emerald-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/20"
                 placeholder="https://images.unsplash.com/..."
               />
             </div>
@@ -116,7 +132,7 @@ export const AdCreator: React.FC<Props> = ({ onSave, initialData }) => {
 
         <button
           onClick={() => onSave(ad)}
-          className="w-full py-4 rounded-2xl bg-emerald-500 text-black font-black text-sm hover:bg-emerald-400 transition-all active:scale-95 mt-4"
+          className="w-full py-4 rounded-2xl bg-emerald-500 text-black font-black text-sm hover:bg-emerald-400 transition-all active:scale-95 mt-4 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black outline-none"
         >
           SAVE AD CREATIVE
         </button>
