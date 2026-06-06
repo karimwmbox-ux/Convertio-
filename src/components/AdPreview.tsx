@@ -24,7 +24,10 @@ export const AdPreview: React.FC<Props> = ({ ad }) => {
             </div>
           </div>
         </div>
-        <button className="text-[#65676b] hover:bg-[#f2f2f2] p-2 rounded-full transition-colors">
+        <button
+          className="text-[#65676b] hover:bg-[#f2f2f2] p-2 rounded-full transition-colors"
+          aria-label="More options"
+        >
           <MoreHorizontal className="w-5 h-5" />
         </button>
       </div>
