@@ -126,6 +126,7 @@ export const AdsDashboard: React.FC = () => {
                               ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"
                               : "bg-gray-500/10 text-gray-400 border border-gray-500/20"
                           )}
+                          aria-label={camp.status === 'ACTIVE' ? "Pause campaign" : "Activate campaign"}
                         >
                           {camp.status === 'ACTIVE' ? <Play className="w-2.5 h-2.5 fill-emerald-400" /> : <Pause className="w-2.5 h-2.5 fill-gray-400" />}
                           {camp.status}

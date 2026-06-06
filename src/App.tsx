@@ -971,6 +971,7 @@ export default function App() {
                 onClick={handleSignOut}
                 className="p-2 rounded-full bg-white/5 border border-white/10 text-gray-400 hover:text-red-400 hover:border-red-500/20 hover:bg-red-500/5 transition-all"
                 title="Disconnect Google Account"
+                aria-label="Sign out"
               >
                 <LogOut className="w-3.5 h-3.5" />
               </button>
@@ -992,6 +993,7 @@ export default function App() {
               value={language}
               onChange={(e) => setLanguage(e.target.value)}
               className="bg-transparent border-none outline-none cursor-pointer font-bold text-gray-300"
+              aria-label="Select language"
             >
               <option value="English" className="bg-black text-white">English</option>
               <option value="Français" className="bg-black text-white">Français</option>
@@ -1141,6 +1143,7 @@ export default function App() {
                             onClick={(e) => handleDeleteCloudPage(e, tpl.id)}
                             className="p-1 text-gray-600 hover:text-red-400 transition-colors rounded hover:bg-white/5"
                             title="Delete permanently"
+                            aria-label="Delete cloud design"
                           >
                             <Trash2 className="w-3.5 h-3.5" />
                           </button>
@@ -1178,6 +1181,7 @@ export default function App() {
                         <button 
                           onClick={(e) => { e.stopPropagation(); setImage(null); }}
                           className="p-3 rounded-full bg-black/70 border border-white/10 mb-2 hover:bg-red-500/50 transition-colors text-white"
+                          aria-label="Remove product image"
                         >
                           <X className="w-4 h-4" />
                         </button>
@@ -1207,8 +1211,9 @@ export default function App() {
                   {/* Name and Niche Selector Grid */}
                   <div className="grid sm:grid-cols-2 gap-6">
                     <div>
-                      <label className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block mb-1.5">Product Name</label>
+                      <label htmlFor="product-name" className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block mb-1.5">Product Name</label>
                       <input 
+                        id="product-name"
                         type="text" 
                         value={formName}
                         onChange={(e) => setFormName(e.target.value)}
@@ -1217,8 +1222,9 @@ export default function App() {
                       />
                     </div>
                     <div>
-                      <label className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block mb-1.5">Store Niche Template</label>
+                      <label htmlFor="niche-select" className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block mb-1.5">Store Niche Template</label>
                       <select 
+                        id="niche-select"
                         value={formNiche}
                         onChange={(e) => handleNicheSelection(e.target.value as Niche)}
                         className="w-full bg-zinc-900 border border-white/10 rounded-xl p-3 text-sm text-white focus:border-emerald-500 focus:outline-none cursor-pointer"
@@ -1396,6 +1402,7 @@ export default function App() {
                   <button 
                     onClick={() => setIsSidebarOpen(false)}
                     className="p-1 px-2 rounded-lg bg-white/5 hover:bg-white/10 text-gray-400 transition-colors text-xs"
+                    aria-label="Close customizer sidebar"
                   >
                     ✕
                   </button>
@@ -1404,8 +1411,9 @@ export default function App() {
                 <div className="space-y-4">
                   {/* Brand customization */}
                   <div>
-                    <label className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block mb-1">Brand Theme Name</label>
+                    <label htmlFor="brand-theme-name" className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block mb-1">Brand Theme Name</label>
                     <input 
+                      id="brand-theme-name"
                       type="text" 
                       value={customBrand}
                       onChange={(e) => setCustomBrand(e.target.value)}
@@ -1539,6 +1547,7 @@ export default function App() {
               <button 
                 onClick={() => setIsSidebarOpen(true)}
                 className="absolute top-4 left-4 z-40 px-4 py-2 rounded-full bg-zinc-900/90 border border-white/15 text-xs text-emerald-400 font-bold hover:bg-black transition-all"
+                aria-label="Open customizer sidebar"
               >
                 ◀ Show Brand Panel
               </button>
