@@ -16,7 +16,7 @@ export const AdPreview: React.FC<Props> = ({ ad }) => {
             B
           </div>
           <div>
-            <div className="font-bold text-[15px] hover:underline cursor-pointer">Brand Name</div>
+            <button type="button" className="font-bold text-[15px] hover:underline cursor-pointer text-left block w-full">Brand Name</button>
             <div className="flex items-center gap-1 text-[13px] text-[#65676b]">
               <span>Sponsored</span>
               <span>·</span>
@@ -24,7 +24,11 @@ export const AdPreview: React.FC<Props> = ({ ad }) => {
             </div>
           </div>
         </div>
-        <button className="text-[#65676b] hover:bg-[#f2f2f2] p-2 rounded-full transition-colors">
+        <button
+          type="button"
+          aria-label="More options"
+          className="text-[#65676b] hover:bg-[#f2f2f2] p-2 rounded-full transition-colors"
+        >
           <MoreHorizontal className="w-5 h-5" />
         </button>
       </div>
@@ -60,15 +64,15 @@ export const AdPreview: React.FC<Props> = ({ ad }) => {
 
       {/* Interactions */}
       <div className="px-4 py-2 flex items-center justify-between border-t border-[#dddfe2] mx-3 my-1">
-        <div className="flex items-center gap-1.5 text-[#65676b] text-[15px] font-medium py-1.5 px-2 hover:bg-[#f2f2f2] rounded-md flex-1 justify-center cursor-pointer">
+        <button type="button" className="flex items-center gap-1.5 text-[#65676b] text-[15px] font-medium py-1.5 px-2 hover:bg-[#f2f2f2] rounded-md flex-1 justify-center transition-colors cursor-pointer">
           <ThumbsUp className="w-5 h-5" /> Like
-        </div>
-        <div className="flex items-center gap-1.5 text-[#65676b] text-[15px] font-medium py-1.5 px-2 hover:bg-[#f2f2f2] rounded-md flex-1 justify-center cursor-pointer">
+        </button>
+        <button type="button" className="flex items-center gap-1.5 text-[#65676b] text-[15px] font-medium py-1.5 px-2 hover:bg-[#f2f2f2] rounded-md flex-1 justify-center transition-colors cursor-pointer">
           <MessageCircle className="w-5 h-5" /> Comment
-        </div>
-        <div className="flex items-center gap-1.5 text-[#65676b] text-[15px] font-medium py-1.5 px-2 hover:bg-[#f2f2f2] rounded-md flex-1 justify-center cursor-pointer">
+        </button>
+        <button type="button" className="flex items-center gap-1.5 text-[#65676b] text-[15px] font-medium py-1.5 px-2 hover:bg-[#f2f2f2] rounded-md flex-1 justify-center transition-colors cursor-pointer">
           <Share2 className="w-5 h-5" /> Share
-        </div>
+        </button>
       </div>
     </div>
   );
