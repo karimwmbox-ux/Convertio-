@@ -971,6 +971,7 @@ export default function App() {
                 onClick={handleSignOut}
                 className="p-2 rounded-full bg-white/5 border border-white/10 text-gray-400 hover:text-red-400 hover:border-red-500/20 hover:bg-red-500/5 transition-all"
                 title="Disconnect Google Account"
+                aria-label="Sign out"
               >
                 <LogOut className="w-3.5 h-3.5" />
               </button>
@@ -1178,6 +1179,7 @@ export default function App() {
                         <button 
                           onClick={(e) => { e.stopPropagation(); setImage(null); }}
                           className="p-3 rounded-full bg-black/70 border border-white/10 mb-2 hover:bg-red-500/50 transition-colors text-white"
+                          aria-label="Remove image"
                         >
                           <X className="w-4 h-4" />
                         </button>
@@ -1207,8 +1209,9 @@ export default function App() {
                   {/* Name and Niche Selector Grid */}
                   <div className="grid sm:grid-cols-2 gap-6">
                     <div>
-                      <label className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block mb-1.5">Product Name</label>
+                      <label htmlFor="product-name" className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block mb-1.5">Product Name</label>
                       <input 
+                        id="product-name"
                         type="text" 
                         value={formName}
                         onChange={(e) => setFormName(e.target.value)}
@@ -1217,8 +1220,9 @@ export default function App() {
                       />
                     </div>
                     <div>
-                      <label className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block mb-1.5">Store Niche Template</label>
+                      <label htmlFor="niche-template" className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block mb-1.5">Store Niche Template</label>
                       <select 
+                        id="niche-template"
                         value={formNiche}
                         onChange={(e) => handleNicheSelection(e.target.value as Niche)}
                         className="w-full bg-zinc-900 border border-white/10 rounded-xl p-3 text-sm text-white focus:border-emerald-500 focus:outline-none cursor-pointer"
@@ -1236,8 +1240,9 @@ export default function App() {
 
                   {/* Hook description */}
                   <div>
-                    <label className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block mb-1.5">Product Subtitle Description (Marketing Hook)</label>
+                    <label htmlFor="product-hook" className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block mb-1.5">Product Subtitle Description (Marketing Hook)</label>
                     <textarea 
+                      id="product-hook"
                       rows={2}
                       value={formDescription}
                       onChange={(e) => setFormDescription(e.target.value)}
