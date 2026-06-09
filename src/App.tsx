@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useId } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { 
   Upload, Sparkles, Wand2, X, Eye, Code, Download, Languages, 
@@ -256,6 +256,10 @@ const LOCAL_NICHE_TEMPLATES: Record<Niche, {
 };
 
 export default function App() {
+  const productNameId = useId();
+  const nicheId = useId();
+  const descriptionId = useId();
+
   const [image, setImage] = useState<string | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
   const [generationStep, setGenerationStep] = useState('');
@@ -971,6 +975,7 @@ export default function App() {
                 onClick={handleSignOut}
                 className="p-2 rounded-full bg-white/5 border border-white/10 text-gray-400 hover:text-red-400 hover:border-red-500/20 hover:bg-red-500/5 transition-all"
                 title="Disconnect Google Account"
+                aria-label="Sign out"
               >
                 <LogOut className="w-3.5 h-3.5" />
               </button>
@@ -1056,10 +1061,11 @@ export default function App() {
               </h3>
               <div className="grid sm:grid-cols-3 gap-6">
                 {SAMPLE_PRESETS.map((preset) => (
-                  <div 
+                  <button
+                    type="button"
                     key={preset.id}
                     onClick={() => loadPresetManually(preset)}
-                    className="p-5 rounded-2xl bg-black border border-white/5 hover:border-emerald-500/35 hover:bg-white/[0.02] transition-all cursor-pointer group flex gap-4 items-center relative overflow-hidden"
+                    className="p-5 rounded-2xl bg-black border border-white/5 hover:border-emerald-500/35 hover:bg-white/[0.02] transition-all cursor-pointer group flex gap-4 items-center relative overflow-hidden text-left"
                   >
                     <img 
                       src={preset.image} 
@@ -1074,7 +1080,7 @@ export default function App() {
                         <Play className="w-2.5 h-2.5 fill-emerald-400" /> Boot Blueprint
                       </span>
                     </div>
-                  </div>
+                  </button>
                 ))}
               </div>
             </div>
@@ -1118,9 +1124,18 @@ export default function App() {
                 <div className="grid sm:grid-cols-3 gap-6">
                   {userTemplates.map((tpl) => (
                     <div 
+                      role="button"
+                      tabIndex={0}
                       key={tpl.id}
                       onClick={() => loadCloudTemplate(tpl)}
-                      className="p-5 rounded-2xl bg-black border border-white/5 hover:border-indigo-500/35 hover:bg-white/[0.02] transition-all cursor-pointer group flex gap-4 items-center relative overflow-hidden"
+                      onKeyDown={(e) => {
+                        if (e.target !== e.currentTarget) return;
+                        if (e.key === 'Enter' || e.key === ' ') {
+                          e.preventDefault();
+                          loadCloudTemplate(tpl);
+                        }
+                      }}
+                      className="p-5 rounded-2xl bg-black border border-white/5 hover:border-indigo-500/35 hover:bg-white/[0.02] transition-all cursor-pointer group flex gap-4 items-center relative overflow-hidden focus:outline-none focus:ring-2 focus:ring-indigo-500"
                     >
                       {tpl.image ? (
                         <img 
@@ -1141,6 +1156,7 @@ export default function App() {
                             onClick={(e) => handleDeleteCloudPage(e, tpl.id)}
                             className="p-1 text-gray-600 hover:text-red-400 transition-colors rounded hover:bg-white/5"
                             title="Delete permanently"
+                            aria-label="Delete template"
                           >
                             <Trash2 className="w-3.5 h-3.5" />
                           </button>
@@ -1178,6 +1194,7 @@ export default function App() {
                         <button 
                           onClick={(e) => { e.stopPropagation(); setImage(null); }}
                           className="p-3 rounded-full bg-black/70 border border-white/10 mb-2 hover:bg-red-500/50 transition-colors text-white"
+                          aria-label="Remove image"
                         >
                           <X className="w-4 h-4" />
                         </button>
@@ -1207,8 +1224,9 @@ export default function App() {
                   {/* Name and Niche Selector Grid */}
                   <div className="grid sm:grid-cols-2 gap-6">
                     <div>
-                      <label className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block mb-1.5">Product Name</label>
+                      <label htmlFor={productNameId} className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block mb-1.5">Product Name</label>
                       <input 
+                        id={productNameId}
                         type="text" 
                         value={formName}
                         onChange={(e) => setFormName(e.target.value)}
@@ -1217,8 +1235,9 @@ export default function App() {
                       />
                     </div>
                     <div>
-                      <label className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block mb-1.5">Store Niche Template</label>
+                      <label htmlFor={nicheId} className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block mb-1.5">Store Niche Template</label>
                       <select 
+                        id={nicheId}
                         value={formNiche}
                         onChange={(e) => handleNicheSelection(e.target.value as Niche)}
                         className="w-full bg-zinc-900 border border-white/10 rounded-xl p-3 text-sm text-white focus:border-emerald-500 focus:outline-none cursor-pointer"
@@ -1236,8 +1255,9 @@ export default function App() {
 
                   {/* Hook description */}
                   <div>
-                    <label className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block mb-1.5">Product Subtitle Description (Marketing Hook)</label>
+                    <label htmlFor={descriptionId} className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block mb-1.5">Product Subtitle Description (Marketing Hook)</label>
                     <textarea 
+                      id={descriptionId}
                       rows={2}
                       value={formDescription}
                       onChange={(e) => setFormDescription(e.target.value)}
@@ -1396,6 +1416,7 @@ export default function App() {
                   <button 
                     onClick={() => setIsSidebarOpen(false)}
                     className="p-1 px-2 rounded-lg bg-white/5 hover:bg-white/10 text-gray-400 transition-colors text-xs"
+                    aria-label="Close sidebar"
                   >
                     ✕
                   </button>
