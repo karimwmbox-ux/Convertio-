@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useId } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { 
   Upload, Sparkles, Wand2, X, Eye, Code, Download, Languages, 
@@ -256,6 +256,19 @@ const LOCAL_NICHE_TEMPLATES: Record<Niche, {
 };
 
 export default function App() {
+  const productNameId = useId();
+  const nicheId = useId();
+  const descriptionId = useId();
+  const feature1TitleId = useId();
+  const feature2TitleId = useId();
+  const feature3TitleId = useId();
+
+  const customBrandId = useId();
+  const customTitleId = useId();
+  const customSubtitleId = useId();
+  const customCtaId = useId();
+  const customGuaranteeId = useId();
+
   const [image, setImage] = useState<string | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
   const [generationStep, setGenerationStep] = useState('');
@@ -971,6 +984,7 @@ export default function App() {
                 onClick={handleSignOut}
                 className="p-2 rounded-full bg-white/5 border border-white/10 text-gray-400 hover:text-red-400 hover:border-red-500/20 hover:bg-red-500/5 transition-all"
                 title="Disconnect Google Account"
+                aria-label="Sign out"
               >
                 <LogOut className="w-3.5 h-3.5" />
               </button>
@@ -1141,6 +1155,7 @@ export default function App() {
                             onClick={(e) => handleDeleteCloudPage(e, tpl.id)}
                             className="p-1 text-gray-600 hover:text-red-400 transition-colors rounded hover:bg-white/5"
                             title="Delete permanently"
+                            aria-label="Delete landing page from cloud"
                           >
                             <Trash2 className="w-3.5 h-3.5" />
                           </button>
@@ -1178,6 +1193,7 @@ export default function App() {
                         <button 
                           onClick={(e) => { e.stopPropagation(); setImage(null); }}
                           className="p-3 rounded-full bg-black/70 border border-white/10 mb-2 hover:bg-red-500/50 transition-colors text-white"
+                          aria-label="Remove product image"
                         >
                           <X className="w-4 h-4" />
                         </button>
@@ -1207,8 +1223,9 @@ export default function App() {
                   {/* Name and Niche Selector Grid */}
                   <div className="grid sm:grid-cols-2 gap-6">
                     <div>
-                      <label className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block mb-1.5">Product Name</label>
+                      <label htmlFor={productNameId} className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block mb-1.5 cursor-pointer">Product Name</label>
                       <input 
+                        id={productNameId}
                         type="text" 
                         value={formName}
                         onChange={(e) => setFormName(e.target.value)}
@@ -1217,8 +1234,9 @@ export default function App() {
                       />
                     </div>
                     <div>
-                      <label className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block mb-1.5">Store Niche Template</label>
+                      <label htmlFor={nicheId} className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block mb-1.5 cursor-pointer">Store Niche Template</label>
                       <select 
+                        id={nicheId}
                         value={formNiche}
                         onChange={(e) => handleNicheSelection(e.target.value as Niche)}
                         className="w-full bg-zinc-900 border border-white/10 rounded-xl p-3 text-sm text-white focus:border-emerald-500 focus:outline-none cursor-pointer"
@@ -1236,8 +1254,9 @@ export default function App() {
 
                   {/* Hook description */}
                   <div>
-                    <label className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block mb-1.5">Product Subtitle Description (Marketing Hook)</label>
+                    <label htmlFor={descriptionId} className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block mb-1.5 cursor-pointer">Product Subtitle Description (Marketing Hook)</label>
                     <textarea 
+                      id={descriptionId}
                       rows={2}
                       value={formDescription}
                       onChange={(e) => setFormDescription(e.target.value)}
@@ -1255,8 +1274,9 @@ export default function App() {
                     <div className="grid sm:grid-cols-3 gap-6">
                       {/* Feature 1 */}
                       <div className="space-y-2 p-4 rounded-xl bg-white/[0.02] border border-white/5">
-                        <label className="text-[9px] font-black text-[#B5BAC1] uppercase tracking-wide block">Feature 1 Title</label>
+                        <label htmlFor={feature1TitleId} className="text-[9px] font-black text-[#B5BAC1] uppercase tracking-wide block cursor-pointer">Feature 1 Title</label>
                         <input 
+                          id={feature1TitleId}
                           type="text" 
                           value={formFeature1}
                           onChange={(e) => setFormFeature1(e.target.value)}
@@ -1272,8 +1292,9 @@ export default function App() {
 
                       {/* Feature 2 */}
                       <div className="space-y-2 p-4 rounded-xl bg-white/[0.02] border border-white/5">
-                        <label className="text-[9px] font-black text-[#B5BAC1] uppercase tracking-wide block">Feature 2 Title</label>
+                        <label htmlFor={feature2TitleId} className="text-[9px] font-black text-[#B5BAC1] uppercase tracking-wide block cursor-pointer">Feature 2 Title</label>
                         <input 
+                          id={feature2TitleId}
                           type="text" 
                           value={formFeature2}
                           onChange={(e) => setFormFeature2(e.target.value)}
@@ -1289,8 +1310,9 @@ export default function App() {
 
                       {/* Feature 3 */}
                       <div className="space-y-2 p-4 rounded-xl bg-white/[0.02] border border-white/5">
-                        <label className="text-[9px] font-black text-[#B5BAC1] uppercase tracking-wide block">Feature 3 Title</label>
+                        <label htmlFor={feature3TitleId} className="text-[9px] font-black text-[#B5BAC1] uppercase tracking-wide block cursor-pointer">Feature 3 Title</label>
                         <input 
+                          id={feature3TitleId}
                           type="text" 
                           value={formFeature3}
                           onChange={(e) => setFormFeature3(e.target.value)}
@@ -1396,6 +1418,7 @@ export default function App() {
                   <button 
                     onClick={() => setIsSidebarOpen(false)}
                     className="p-1 px-2 rounded-lg bg-white/5 hover:bg-white/10 text-gray-400 transition-colors text-xs"
+                    aria-label="Close brand panel"
                   >
                     ✕
                   </button>
@@ -1404,8 +1427,9 @@ export default function App() {
                 <div className="space-y-4">
                   {/* Brand customization */}
                   <div>
-                    <label className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block mb-1">Brand Theme Name</label>
+                    <label htmlFor={customBrandId} className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block mb-1 cursor-pointer">Brand Theme Name</label>
                     <input 
+                      id={customBrandId}
                       type="text" 
                       value={customBrand}
                       onChange={(e) => setCustomBrand(e.target.value)}
@@ -1415,8 +1439,9 @@ export default function App() {
 
                   {/* Headline */}
                   <div>
-                    <label className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block mb-1">Primary Sales Title</label>
+                    <label htmlFor={customTitleId} className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block mb-1 cursor-pointer">Primary Sales Title</label>
                     <textarea 
+                      id={customTitleId}
                       rows={3}
                       value={customTitle}
                       onChange={(e) => setCustomTitle(e.target.value)}
@@ -1426,8 +1451,9 @@ export default function App() {
 
                   {/* Subtitle */}
                   <div>
-                    <label className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block mb-1">Marketing Subtitle</label>
+                    <label htmlFor={customSubtitleId} className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block mb-1 cursor-pointer">Marketing Subtitle</label>
                     <textarea 
+                      id={customSubtitleId}
                       rows={3}
                       value={customSubtitle}
                       onChange={(e) => setCustomSubtitle(e.target.value)}
@@ -1437,8 +1463,9 @@ export default function App() {
 
                   {/* CTA */}
                   <div>
-                    <label className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block mb-1">CTA Action Button Text</label>
+                    <label htmlFor={customCtaId} className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block mb-1 cursor-pointer">CTA Action Button Text</label>
                     <input 
+                      id={customCtaId}
                       type="text" 
                       value={customCta}
                       onChange={(e) => setCustomCta(e.target.value)}
@@ -1448,8 +1475,9 @@ export default function App() {
 
                   {/* Guarantee Title */}
                   <div>
-                    <label className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block mb-1">Guarantee Badge Text</label>
+                    <label htmlFor={customGuaranteeId} className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block mb-1 cursor-pointer">Guarantee Badge Text</label>
                     <input 
+                      id={customGuaranteeId}
                       type="text" 
                       value={customGuaranteeTitle}
                       onChange={(e) => setCustomGuaranteeTitle(e.target.value)}
