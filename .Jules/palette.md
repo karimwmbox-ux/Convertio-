@@ -1,0 +1,3 @@
+## 2025-05-15 - [AI Generation UX & Form Accessibility]
+**Learning:** Introducing a small artificial delay (e.g., 800ms) with a loading state (spinner + 'Generating...' text) for simulated AI actions significantly improves the "perceived value" and "delight" of the feature, making it feel more like a complex background process. Additionally, associating form labels with inputs using `useId` and `htmlFor` and adding `cursor-pointer` to labels provides essential visual feedback and accessibility.
+**Action:** Always use `useId` for stable unique IDs in reusable components, implement `useRef` for timer management with `useEffect` cleanup, and use `ReturnType<typeof setTimeout>` for browser-safe typing.
