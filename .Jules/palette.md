@@ -1,0 +1,3 @@
+## 2025-05-14 - [Delight Pattern & Accessibility in AI Forms]
+**Learning:** Adding a deliberate "delight delay" (e.g., 800ms) to simulated AI generation, paired with a loading state, significantly improves the user's perception of the feature's complexity and value. Proper form accessibility using `useId` and `htmlFor` is essential for screen readers and improves the hit area of interactive labels.
+**Action:** Always implement a brief delay and loading indicator for "AI Magic" features. Use `useId` to generate unique, stable IDs for form field associations. Add `cursor-pointer` to labels to signal interactivity.

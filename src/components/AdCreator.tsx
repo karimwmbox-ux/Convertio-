@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useId, useRef, useEffect } from 'react';
 import { MetaAd } from '../types';
 import { AdPreview } from './AdPreview';
-import { Wand2, Image as ImageIcon, Layout, Type } from 'lucide-react';
+import { Wand2, Image as ImageIcon, Layout, Type, Loader2 } from 'lucide-react';
 
 interface Props {
   onSave: (ad: Partial<MetaAd>) => void;
@@ -9,6 +9,12 @@ interface Props {
 }
 
 export const AdCreator: React.FC<Props> = ({ onSave, initialData }) => {
+  const adNameId = useId();
+  const adBodyId = useId();
+  const adHeadlineId = useId();
+  const adCtaId = useId();
+  const adImageUrlId = useId();
+
   const [ad, setAd] = useState<Partial<MetaAd>>(initialData || {
     name: '',
     headline: '',
@@ -17,19 +23,35 @@ export const AdCreator: React.FC<Props> = ({ onSave, initialData }) => {
     imageUrl: ''
   });
 
+  const [isGenerating, setIsGenerating] = useState(false);
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setAd(prev => ({ ...prev, [name]: value }));
   };
 
   const handleGenerateCopy = () => {
-    // Simulating AI generation
-    setAd(prev => ({
-      ...prev,
-      headline: "The Future of Professional Gear.",
-      body: "Experience unmatched quality and design. Our latest collection is engineered for those who demand excellence in every detail. Limited stock available."
-    }));
+    // Simulating AI generation with delight delay
+    setIsGenerating(true);
+
+    if (timerRef.current) clearTimeout(timerRef.current);
+
+    timerRef.current = setTimeout(() => {
+      setAd(prev => ({
+        ...prev,
+        headline: "The Future of Professional Gear.",
+        body: "Experience unmatched quality and design. Our latest collection is engineered for those who demand excellence in every detail. Limited stock available."
+      }));
+      setIsGenerating(false);
+    }, 800);
   };
+
+  useEffect(() => {
+    return () => {
+      if (timerRef.current) clearTimeout(timerRef.current);
+    };
+  }, []);
 
   return (
     <div className="grid lg:grid-cols-2 gap-8 items-start">
@@ -41,16 +63,26 @@ export const AdCreator: React.FC<Props> = ({ onSave, initialData }) => {
           </h3>
           <button
             onClick={handleGenerateCopy}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-[10px] font-bold text-indigo-400 hover:bg-indigo-500/20 transition-all"
+            disabled={isGenerating}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-[10px] font-bold text-indigo-400 hover:bg-indigo-500/20 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            <Wand2 className="w-3 h-3" /> Magic Generate
+            {isGenerating ? (
+              <>
+                <Loader2 className="w-3 h-3 animate-spin" /> Generating...
+              </>
+            ) : (
+              <>
+                <Wand2 className="w-3 h-3" /> Magic Generate
+              </>
+            )}
           </button>
         </div>
 
         <div className="space-y-4">
           <div>
-            <label className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block mb-1.5">Ad Name</label>
+            <label htmlFor={adNameId} className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block mb-1.5 cursor-pointer">Ad Name</label>
             <input
+              id={adNameId}
               name="name"
               value={ad.name}
               onChange={handleChange}
@@ -60,10 +92,11 @@ export const AdCreator: React.FC<Props> = ({ onSave, initialData }) => {
           </div>
 
           <div>
-            <label className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block mb-1.5 flex items-center gap-1.5">
+            <label htmlFor={adBodyId} className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block mb-1.5 flex items-center gap-1.5 cursor-pointer">
               <Type className="w-3 h-3" /> Primary Text (Body)
             </label>
             <textarea
+              id={adBodyId}
               name="body"
               rows={4}
               value={ad.body}
@@ -74,8 +107,9 @@ export const AdCreator: React.FC<Props> = ({ onSave, initialData }) => {
           </div>
 
           <div>
-            <label className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block mb-1.5">Headline</label>
+            <label htmlFor={adHeadlineId} className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block mb-1.5 cursor-pointer">Headline</label>
             <input
+              id={adHeadlineId}
               name="headline"
               value={ad.headline}
               onChange={handleChange}
@@ -86,8 +120,9 @@ export const AdCreator: React.FC<Props> = ({ onSave, initialData }) => {
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block mb-1.5">Call to Action</label>
+              <label htmlFor={adCtaId} className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block mb-1.5 cursor-pointer">Call to Action</label>
               <select
+                id={adCtaId}
                 name="cta"
                 value={ad.cta}
                 onChange={handleChange}
@@ -100,10 +135,11 @@ export const AdCreator: React.FC<Props> = ({ onSave, initialData }) => {
               </select>
             </div>
             <div>
-              <label className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block mb-1.5 flex items-center gap-1.5">
+              <label htmlFor={adImageUrlId} className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block mb-1.5 flex items-center gap-1.5 cursor-pointer">
                 <ImageIcon className="w-3 h-3" /> Image URL
               </label>
               <input
+                id={adImageUrlId}
                 name="imageUrl"
                 value={ad.imageUrl}
                 onChange={handleChange}
