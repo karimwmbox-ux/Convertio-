@@ -1,0 +1,3 @@
+## 2025-05-14 - UX 'Delight' Pattern & Accessibility in AI Forms
+**Learning:** When simulating AI generation or performing fast async tasks, introducing a small artificial delay (e.g., 800ms) with a clear loading state (spinner + 'Generating...' text) improves the user's perception of the feature's value and complexity. Combining this with standard accessibility practices like `useId` for input-label association ensures the interface is both delightful and inclusive.
+**Action:** Always pair simulated async states with a visual loading indicator and ensure all new form elements are properly associated with labels using unique IDs.
