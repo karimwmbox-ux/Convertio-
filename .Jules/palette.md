@@ -1,0 +1,3 @@
+## 2025-05-14 - [Form Accessibility & AI Feedback Pattern]
+**Learning:** In highly interactive AI dashboards, users often expect immediate feedback for 'generation' tasks. Introducing a small artificial delay (800ms) with a clear loading state ('Generating...' text + spinning icon) improves the perceived value of the AI feature. Additionally, using React's `useId` for associating labels with inputs is crucial for accessibility in reusable components to avoid ID collisions.
+**Action:** Always associate labels with inputs using `useId` and `htmlFor`, and provide visual feedback for async/simulated async operations using a standard loading pattern (e.g., `RefreshCw` with `animate-spin`).
