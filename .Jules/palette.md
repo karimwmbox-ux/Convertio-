@@ -1,0 +1,3 @@
+## 2026-06-27 - [Accessibility & UX Delight in AdCreator]
+**Learning:** Form fields in the Meta Ads module were missing semantic associations between labels and inputs, hindering screen reader support. Additionally, immediate simulated AI generation felt "too fast," potentially devaluing the perceived complexity of the operation.
+**Action:** Always use 'useId' for stable, unique IDs in React components. Pair 'htmlFor' on labels with 'id' on inputs. Introduce a controlled artificial delay (e.g., 800ms) with a clear loading state ("Generating...") and spinning icons to improve the perceived value of AI features.
