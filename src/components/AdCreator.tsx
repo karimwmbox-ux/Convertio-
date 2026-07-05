@@ -1,14 +1,24 @@
-import React, { useState } from 'react';
+import React, { useState, useId } from 'react';
 import { MetaAd } from '../types';
 import { AdPreview } from './AdPreview';
 import { Wand2, Image as ImageIcon, Layout, Type } from 'lucide-react';
+import { cn } from '../lib/utils';
 
 interface Props {
   onSave: (ad: Partial<MetaAd>) => void;
   initialData?: Partial<MetaAd>;
 }
 
+const BODY_LIMIT = 125;
+const HEADLINE_LIMIT = 40;
+
 export const AdCreator: React.FC<Props> = ({ onSave, initialData }) => {
+  const nameId = useId();
+  const bodyId = useId();
+  const headlineId = useId();
+  const ctaId = useId();
+  const imageUrlId = useId();
+
   const [ad, setAd] = useState<Partial<MetaAd>>(initialData || {
     name: '',
     headline: '',
@@ -31,6 +41,12 @@ export const AdCreator: React.FC<Props> = ({ onSave, initialData }) => {
     }));
   };
 
+  const getCharCountColor = (count: number, limit: number) => {
+    if (count > limit) return 'text-red-400';
+    if (count > limit * 0.8) return 'text-orange-400';
+    return 'text-gray-500';
+  };
+
   return (
     <div className="grid lg:grid-cols-2 gap-8 items-start">
       {/* Form Side */}
@@ -49,8 +65,11 @@ export const AdCreator: React.FC<Props> = ({ onSave, initialData }) => {
 
         <div className="space-y-4">
           <div>
-            <label className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block mb-1.5">Ad Name</label>
+            <label htmlFor={nameId} className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block mb-1.5 cursor-pointer">
+              Ad Name
+            </label>
             <input
+              id={nameId}
               name="name"
               value={ad.name}
               onChange={handleChange}
@@ -60,10 +79,16 @@ export const AdCreator: React.FC<Props> = ({ onSave, initialData }) => {
           </div>
 
           <div>
-            <label className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block mb-1.5 flex items-center gap-1.5">
-              <Type className="w-3 h-3" /> Primary Text (Body)
-            </label>
+            <div className="flex justify-between items-end mb-1.5">
+              <label htmlFor={bodyId} className="text-[10px] font-bold text-gray-400 uppercase tracking-wider flex items-center gap-1.5 cursor-pointer">
+                <Type className="w-3 h-3" /> Primary Text (Body)
+              </label>
+              <span className={cn("text-[10px] font-mono font-bold", getCharCountColor(ad.body?.length || 0, BODY_LIMIT))}>
+                {ad.body?.length || 0}/{BODY_LIMIT}
+              </span>
+            </div>
             <textarea
+              id={bodyId}
               name="body"
               rows={4}
               value={ad.body}
@@ -74,8 +99,16 @@ export const AdCreator: React.FC<Props> = ({ onSave, initialData }) => {
           </div>
 
           <div>
-            <label className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block mb-1.5">Headline</label>
+            <div className="flex justify-between items-end mb-1.5">
+              <label htmlFor={headlineId} className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block cursor-pointer">
+                Headline
+              </label>
+              <span className={cn("text-[10px] font-mono font-bold", getCharCountColor(ad.headline?.length || 0, HEADLINE_LIMIT))}>
+                {ad.headline?.length || 0}/{HEADLINE_LIMIT}
+              </span>
+            </div>
             <input
+              id={headlineId}
               name="headline"
               value={ad.headline}
               onChange={handleChange}
@@ -86,8 +119,11 @@ export const AdCreator: React.FC<Props> = ({ onSave, initialData }) => {
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block mb-1.5">Call to Action</label>
+              <label htmlFor={ctaId} className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block mb-1.5 cursor-pointer">
+                Call to Action
+              </label>
               <select
+                id={ctaId}
                 name="cta"
                 value={ad.cta}
                 onChange={handleChange}
@@ -100,10 +136,11 @@ export const AdCreator: React.FC<Props> = ({ onSave, initialData }) => {
               </select>
             </div>
             <div>
-              <label className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block mb-1.5 flex items-center gap-1.5">
+              <label htmlFor={imageUrlId} className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block mb-1.5 flex items-center gap-1.5 cursor-pointer">
                 <ImageIcon className="w-3 h-3" /> Image URL
               </label>
               <input
+                id={imageUrlId}
                 name="imageUrl"
                 value={ad.imageUrl}
                 onChange={handleChange}
