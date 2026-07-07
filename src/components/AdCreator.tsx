@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useId } from 'react';
 import { MetaAd } from '../types';
 import { AdPreview } from './AdPreview';
 import { Wand2, Image as ImageIcon, Layout, Type } from 'lucide-react';
+import { cn } from '../lib/utils';
 
 interface Props {
   onSave: (ad: Partial<MetaAd>) => void;
@@ -9,6 +10,12 @@ interface Props {
 }
 
 export const AdCreator: React.FC<Props> = ({ onSave, initialData }) => {
+  const nameId = useId();
+  const bodyId = useId();
+  const headlineId = useId();
+  const ctaId = useId();
+  const imageUrlId = useId();
+
   const [ad, setAd] = useState<Partial<MetaAd>>(initialData || {
     name: '',
     headline: '',
@@ -49,67 +56,37 @@ export const AdCreator: React.FC<Props> = ({ onSave, initialData }) => {
 
         <div className="space-y-4">
           <div>
-            <label className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block mb-1.5">Ad Name</label>
-            <input
-              name="name"
-              value={ad.name}
-              onChange={handleChange}
-              className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-sm text-white focus:border-emerald-500 focus:outline-none"
-              placeholder="e.g. Summer Launch - V1"
-            />
+            <label htmlFor={nameId} className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block mb-1.5 cursor-pointer">Ad Name</label>
+            <input id={nameId} name="name" value={ad.name} onChange={handleChange}
+              className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-sm text-white focus:border-emerald-500 focus:outline-none" placeholder="e.g. Summer Launch - V1" />
           </div>
-
           <div>
-            <label className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block mb-1.5 flex items-center gap-1.5">
-              <Type className="w-3 h-3" /> Primary Text (Body)
-            </label>
-            <textarea
-              name="body"
-              rows={4}
-              value={ad.body}
-              onChange={handleChange}
-              className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-sm text-white focus:border-emerald-500 focus:outline-none resize-none"
-              placeholder="Tell people what your ad is about..."
-            />
+            <div className="flex justify-between items-center mb-1.5">
+              <label htmlFor={bodyId} className="text-[10px] font-bold text-gray-400 uppercase tracking-wider flex items-center gap-1.5 cursor-pointer"><Type className="w-3 h-3" /> Primary Text (Body)</label>
+              <span className={cn("text-[9px] font-bold px-1.5 py-0.5 rounded-full", (ad.body?.length || 0) > 125 ? "bg-red-500/20 text-red-400" : (ad.body?.length || 0) > 100 ? "bg-orange-500/20 text-orange-400" : "bg-white/5 text-gray-500")}>{(ad.body?.length || 0)}/125</span>
+            </div>
+            <textarea id={bodyId} name="body" rows={4} value={ad.body} onChange={handleChange}
+              className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-sm text-white focus:border-emerald-500 focus:outline-none resize-none" placeholder="Tell people what your ad is about..." />
           </div>
-
           <div>
-            <label className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block mb-1.5">Headline</label>
-            <input
-              name="headline"
-              value={ad.headline}
-              onChange={handleChange}
-              className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-sm text-white focus:border-emerald-500 focus:outline-none"
-              placeholder="Catchy headline"
-            />
+            <div className="flex justify-between items-center mb-1.5">
+              <label htmlFor={headlineId} className="text-[10px] font-bold text-gray-400 uppercase tracking-wider cursor-pointer">Headline</label>
+              <span className={cn("text-[9px] font-bold px-1.5 py-0.5 rounded-full", (ad.headline?.length || 0) > 40 ? "bg-red-500/20 text-red-400" : (ad.headline?.length || 0) > 32 ? "bg-orange-500/20 text-orange-400" : "bg-white/5 text-gray-500")}>{(ad.headline?.length || 0)}/40</span>
+            </div>
+            <input id={headlineId} name="headline" value={ad.headline} onChange={handleChange}
+              className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-sm text-white focus:border-emerald-500 focus:outline-none" placeholder="Catchy headline" />
           </div>
-
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block mb-1.5">Call to Action</label>
-              <select
-                name="cta"
-                value={ad.cta}
-                onChange={handleChange}
-                className="w-full bg-zinc-900 border border-white/10 rounded-xl p-3 text-sm text-white focus:border-emerald-500 focus:outline-none cursor-pointer"
-              >
-                <option value="Learn More">Learn More</option>
-                <option value="Shop Now">Shop Now</option>
-                <option value="Get Offer">Get Offer</option>
-                <option value="Sign Up">Sign Up</option>
+              <label htmlFor={ctaId} className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block mb-1.5 cursor-pointer">Call to Action</label>
+              <select id={ctaId} name="cta" value={ad.cta} onChange={handleChange} className="w-full bg-zinc-900 border border-white/10 rounded-xl p-3 text-sm text-white focus:border-emerald-500 focus:outline-none cursor-pointer">
+                <option value="Learn More">Learn More</option><option value="Shop Now">Shop Now</option><option value="Get Offer">Get Offer</option><option value="Sign Up">Sign Up</option>
               </select>
             </div>
             <div>
-              <label className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block mb-1.5 flex items-center gap-1.5">
-                <ImageIcon className="w-3 h-3" /> Image URL
-              </label>
-              <input
-                name="imageUrl"
-                value={ad.imageUrl}
-                onChange={handleChange}
-                className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-sm text-white focus:border-emerald-500 focus:outline-none"
-                placeholder="https://images.unsplash.com/..."
-              />
+              <label htmlFor={imageUrlId} className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block mb-1.5 flex items-center gap-1.5 cursor-pointer"><ImageIcon className="w-3 h-3" /> Image URL</label>
+              <input id={imageUrlId} name="imageUrl" value={ad.imageUrl} onChange={handleChange}
+                className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-sm text-white focus:border-emerald-500 focus:outline-none" placeholder="https://images.unsplash.com/..." />
             </div>
           </div>
         </div>
