@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useId } from 'react';
 import { MetaAd } from '../types';
 import { AdPreview } from './AdPreview';
 import { Wand2, Image as ImageIcon, Layout, Type } from 'lucide-react';
+import { cn } from '../lib/utils';
 
 interface Props {
   onSave: (ad: Partial<MetaAd>) => void;
@@ -9,6 +10,9 @@ interface Props {
 }
 
 export const AdCreator: React.FC<Props> = ({ onSave, initialData }) => {
+  const bodyId = useId();
+  const headlineId = useId();
+
   const [ad, setAd] = useState<Partial<MetaAd>>(initialData || {
     name: '',
     headline: '',
@@ -60,10 +64,16 @@ export const AdCreator: React.FC<Props> = ({ onSave, initialData }) => {
           </div>
 
           <div>
-            <label className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block mb-1.5 flex items-center gap-1.5">
-              <Type className="w-3 h-3" /> Primary Text (Body)
-            </label>
+            <div className="flex justify-between items-center mb-1.5">
+              <label htmlFor={bodyId} className="text-[10px] font-bold text-gray-400 uppercase tracking-wider flex items-center gap-1.5 cursor-pointer">
+                <Type className="w-3 h-3" /> Primary Text (Body)
+              </label>
+              <span className={cn("text-[10px] font-bold tabular-nums", (ad.body?.length || 0) > 125 ? "text-red-500" : (ad.body?.length || 0) > 100 ? "text-orange-500" : "text-gray-500")}>
+                {ad.body?.length || 0}/125
+              </span>
+            </div>
             <textarea
+              id={bodyId}
               name="body"
               rows={4}
               value={ad.body}
@@ -74,8 +84,14 @@ export const AdCreator: React.FC<Props> = ({ onSave, initialData }) => {
           </div>
 
           <div>
-            <label className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block mb-1.5">Headline</label>
+            <div className="flex justify-between items-center mb-1.5">
+              <label htmlFor={headlineId} className="text-[10px] font-bold text-gray-400 uppercase tracking-wider cursor-pointer">Headline</label>
+              <span className={cn("text-[10px] font-bold tabular-nums", (ad.headline?.length || 0) > 40 ? "text-red-500" : (ad.headline?.length || 0) > 32 ? "text-orange-500" : "text-gray-500")}>
+                {ad.headline?.length || 0}/40
+              </span>
+            </div>
             <input
+              id={headlineId}
               name="headline"
               value={ad.headline}
               onChange={handleChange}
