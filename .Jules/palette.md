@@ -1,0 +1,3 @@
+## 2026-07-19 - Color-Coded Character Limits and Simulated Async UI States
+**Learning:** Immediate visual feedback via color-coded character thresholds (orange at 80% capacity, red when exceeded) paired with disabled states and continuous-tense loaders ("Generating...") during mock AI generation prevents form submission race conditions while dramatically increasing accessibility (via useId) and clarity for the end-user.
+**Action:** Always link form labels to inputs using useId and apply cursor-pointer classes for interactive labels. Implement color indicators for character counters and disable form controls during loading or generating events to ensure robust UX.
