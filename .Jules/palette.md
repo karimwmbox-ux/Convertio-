@@ -1,0 +1,3 @@
+## 2026-07-20 - Ad Creator Input Accessibility & Micro-Feedback Limits
+**Learning:** Form field associations are critical for assistive tech. Pairing standard HTML htmlFor/id with custom `useId` provides robust labels. Character count threshold colors (orange at 80% and red at 100%+) offer direct physical boundaries. Implementing visual loading haptics (like spinners and continuous-tense 'Generating...' or 'Saving...') during simulated/actual async procedures clarifies operations and blocks accidental multiple submissions.
+**Action:** Use unique `useId()` hooks for label-input associations, design clear character limit indicators matching target marketing limits, and disable controls with clear visual spinner/loading feedback during operations.
