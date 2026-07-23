@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { MetaAd } from '../types';
 import { AdPreview } from './AdPreview';
-import { Wand2, Image as ImageIcon, Layout, Type } from 'lucide-react';
+import { Wand2, Image as ImageIcon, Layout, Type, RefreshCw } from 'lucide-react';
 
 interface Props {
   onSave: (ad: Partial<MetaAd>) => void;
@@ -22,13 +22,14 @@ export const AdCreator: React.FC<Props> = ({ onSave, initialData }) => {
     setAd(prev => ({ ...prev, [name]: value }));
   };
 
+  const [isGenerating, setIsGenerating] = useState(false); const timer = useRef<any>(null);
+  useEffect(() => () => clearTimeout(timer.current), []);
   const handleGenerateCopy = () => {
-    // Simulating AI generation
-    setAd(prev => ({
-      ...prev,
-      headline: "The Future of Professional Gear.",
-      body: "Experience unmatched quality and design. Our latest collection is engineered for those who demand excellence in every detail. Limited stock available."
-    }));
+    setIsGenerating(true);
+    timer.current = setTimeout(() => {
+      setAd(prev => ({ ...prev, headline: "The Future of Professional Gear.", body: "Experience unmatched quality and design. Our latest collection is engineered for those who demand excellence in every detail. Limited stock available." }));
+      setIsGenerating(false);
+    }, 800);
   };
 
   return (
@@ -41,9 +42,11 @@ export const AdCreator: React.FC<Props> = ({ onSave, initialData }) => {
           </h3>
           <button
             onClick={handleGenerateCopy}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-[10px] font-bold text-indigo-400 hover:bg-indigo-500/20 transition-all"
+            disabled={isGenerating}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-[10px] font-bold text-indigo-400 hover:bg-indigo-500/20 transition-all disabled:opacity-50"
           >
-            <Wand2 className="w-3 h-3" /> Magic Generate
+            {isGenerating ? <RefreshCw className="w-3 h-3 animate-spin" /> : <Wand2 className="w-3 h-3" />}
+            {isGenerating ? 'Generating...' : 'Magic Generate'}
           </button>
         </div>
 
