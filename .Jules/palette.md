@@ -1,0 +1,3 @@
+## 2026-07-24 - Form Accessibility and Simulated Async UX
+**Learning:** Found that custom ad form inputs in the Ad Creator lacked HTML label association. Clicking on labels did not focus the target input, which is a major accessibility barrier. Additionally, instantaneous "Magic Generate" copy creation lacked visual feedback, causing a disjointed UX.
+**Action:** Used standard React `useId` hooks to associate each form label to its input element, added `cursor-pointer` to labels for visual interactive cues, and introduced a simulated 800ms generation delay showing a spinner (`RefreshCw` with `animate-spin`) and disabling interactive form states to denote asynchronous complexity and prevent duplicate form updates.
