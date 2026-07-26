@@ -1,0 +1,3 @@
+## 2026-03-05 - Transient UI State Testing in Playwright
+**Learning:** Simulating artificial AI generation delays dramatically boosts user confidence and delight. However, during end-to-end testing with Playwright, verifying these states requires targeting locators matching the new transient text and properties (e.g., 'Generating...' label and disabled attribute) to prevent stale element reference or selector resolution errors.
+**Action:** Always coordinate Playwright locators to dynamically query for the updated text content of active components during simulated asynchronous transitions rather than reusing static cached selectors.
