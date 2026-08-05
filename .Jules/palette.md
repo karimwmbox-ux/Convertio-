@@ -1,0 +1,3 @@
+## 2026-03-01 - [Meta Ads Form Accessibility and Micro-feedback Indicators]
+**Learning:** Adding standardized accessibility IDs and proper `htmlFor` attributes to form labels with interactive cursors significantly improves focus-target association and assistive technologies' discoverability. In addition, providing balanced, color-coded visual character counters for textareas and inputs gives immediate, non-intrusive feedback on optimal length thresholds.
+**Action:** Always map inputs/textarea elements with unique generated semantic `useId` hooks, ensure labels use the matching ID and are visually interactive with `cursor-pointer`, and place color-coded character counters side-by-side with labels to preserve spatial alignment.
