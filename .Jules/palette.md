@@ -1,0 +1,3 @@
+## 2026-08-06 - Accessible Forms and Asynchronous Micro-UX in Meta Ads
+**Learning:** For high-intent AI generation workflows (such as ad copywriting), immediate state transitions can feel abrupt and low-effort to users. Introducing an artificial delay (800ms) with a disabled loading state and spinning icon enhances perceived value. Furthermore, pairing standard accessibility mapping (via useId) with real-time color-coded character counters (gray to orange to red) ensures immediate, screen-reader-friendly validation boundaries.
+**Action:** Always generate unique access keys dynamically via `useId` for field labeling, and pair any simulated offline AI action with loading/disabled UI transitions to establish robust user feedback.
