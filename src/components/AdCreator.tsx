@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useId, useRef, useEffect } from 'react';
 import { MetaAd } from '../types';
 import { AdPreview } from './AdPreview';
-import { Wand2, Image as ImageIcon, Layout, Type } from 'lucide-react';
+import { Wand2, Image as ImageIcon, Layout, Type, RefreshCw } from 'lucide-react';
 
 interface Props {
   onSave: (ad: Partial<MetaAd>) => void;
@@ -9,13 +9,13 @@ interface Props {
 }
 
 export const AdCreator: React.FC<Props> = ({ onSave, initialData }) => {
-  const [ad, setAd] = useState<Partial<MetaAd>>(initialData || {
-    name: '',
-    headline: '',
-    body: '',
-    cta: 'Learn More',
-    imageUrl: ''
-  });
+  const [ad, setAd] = useState<Partial<MetaAd>>(() => ({ name: '', headline: '', body: '', cta: 'Learn More', imageUrl: '', ...initialData }));
+  const [isGenerating, setIsGenerating] = useState(false);
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const nameId = useId(), bodyId = useId(), headlineId = useId(), ctaId = useId(), imageUrlId = useId();
+
+  useEffect(() => () => { if (timerRef.current) clearTimeout(timerRef.current); }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -23,12 +23,12 @@ export const AdCreator: React.FC<Props> = ({ onSave, initialData }) => {
   };
 
   const handleGenerateCopy = () => {
-    // Simulating AI generation
-    setAd(prev => ({
-      ...prev,
-      headline: "The Future of Professional Gear.",
-      body: "Experience unmatched quality and design. Our latest collection is engineered for those who demand excellence in every detail. Limited stock available."
-    }));
+    if (isGenerating) return;
+    setIsGenerating(true);
+    timerRef.current = setTimeout(() => {
+      setAd(prev => ({ ...prev, headline: "The Future of Professional Gear.", body: "Experience unmatched quality and design. Our latest collection is engineered for those who demand excellence in every detail. Limited stock available." }));
+      setIsGenerating(false);
+    }, 800);
   };
 
   return (
@@ -41,58 +41,36 @@ export const AdCreator: React.FC<Props> = ({ onSave, initialData }) => {
           </h3>
           <button
             onClick={handleGenerateCopy}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-[10px] font-bold text-indigo-400 hover:bg-indigo-500/20 transition-all"
+            disabled={isGenerating}
+            aria-label="Generate AI Copy"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-[10px] font-bold text-indigo-400 hover:bg-indigo-500/20 transition-all disabled:opacity-50 cursor-pointer"
           >
-            <Wand2 className="w-3 h-3" /> Magic Generate
+            {isGenerating ? <><RefreshCw className="w-3 h-3 animate-spin" /> Generating...</> : <><Wand2 className="w-3 h-3" /> Magic Generate</>}
           </button>
         </div>
 
         <div className="space-y-4">
           <div>
-            <label className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block mb-1.5">Ad Name</label>
-            <input
-              name="name"
-              value={ad.name}
-              onChange={handleChange}
-              className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-sm text-white focus:border-emerald-500 focus:outline-none"
-              placeholder="e.g. Summer Launch - V1"
-            />
+            <label htmlFor={nameId} className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block mb-1.5 cursor-pointer">Ad Name</label>
+            <input id={nameId} name="name" value={ad.name} onChange={handleChange} className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-sm text-white focus:border-emerald-500 focus:outline-none" placeholder="e.g. Summer Launch - V1" />
           </div>
 
           <div>
-            <label className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block mb-1.5 flex items-center gap-1.5">
+            <label htmlFor={bodyId} className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block mb-1.5 flex items-center gap-1.5 cursor-pointer">
               <Type className="w-3 h-3" /> Primary Text (Body)
             </label>
-            <textarea
-              name="body"
-              rows={4}
-              value={ad.body}
-              onChange={handleChange}
-              className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-sm text-white focus:border-emerald-500 focus:outline-none resize-none"
-              placeholder="Tell people what your ad is about..."
-            />
+            <textarea id={bodyId} name="body" rows={4} value={ad.body} onChange={handleChange} className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-sm text-white focus:border-emerald-500 focus:outline-none resize-none" placeholder="Tell people what your ad is about..." />
           </div>
 
           <div>
-            <label className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block mb-1.5">Headline</label>
-            <input
-              name="headline"
-              value={ad.headline}
-              onChange={handleChange}
-              className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-sm text-white focus:border-emerald-500 focus:outline-none"
-              placeholder="Catchy headline"
-            />
+            <label htmlFor={headlineId} className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block mb-1.5 cursor-pointer">Headline</label>
+            <input id={headlineId} name="headline" value={ad.headline} onChange={handleChange} className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-sm text-white focus:border-emerald-500 focus:outline-none" placeholder="Catchy headline" />
           </div>
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block mb-1.5">Call to Action</label>
-              <select
-                name="cta"
-                value={ad.cta}
-                onChange={handleChange}
-                className="w-full bg-zinc-900 border border-white/10 rounded-xl p-3 text-sm text-white focus:border-emerald-500 focus:outline-none cursor-pointer"
-              >
+              <label htmlFor={ctaId} className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block mb-1.5 cursor-pointer">Call to Action</label>
+              <select id={ctaId} name="cta" value={ad.cta} onChange={handleChange} className="w-full bg-zinc-900 border border-white/10 rounded-xl p-3 text-sm text-white focus:border-emerald-500 focus:outline-none cursor-pointer">
                 <option value="Learn More">Learn More</option>
                 <option value="Shop Now">Shop Now</option>
                 <option value="Get Offer">Get Offer</option>
@@ -100,16 +78,10 @@ export const AdCreator: React.FC<Props> = ({ onSave, initialData }) => {
               </select>
             </div>
             <div>
-              <label className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block mb-1.5 flex items-center gap-1.5">
+              <label htmlFor={imageUrlId} className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block mb-1.5 flex items-center gap-1.5 cursor-pointer">
                 <ImageIcon className="w-3 h-3" /> Image URL
               </label>
-              <input
-                name="imageUrl"
-                value={ad.imageUrl}
-                onChange={handleChange}
-                className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-sm text-white focus:border-emerald-500 focus:outline-none"
-                placeholder="https://images.unsplash.com/..."
-              />
+              <input id={imageUrlId} name="imageUrl" value={ad.imageUrl} onChange={handleChange} className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-sm text-white focus:border-emerald-500 focus:outline-none" placeholder="https://images.unsplash.com/..." />
             </div>
           </div>
         </div>
