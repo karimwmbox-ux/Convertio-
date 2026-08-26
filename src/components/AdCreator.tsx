@@ -22,6 +22,12 @@ export const AdCreator: React.FC<Props> = ({ onSave, initialData }) => {
     setAd(prev => ({ ...prev, [name]: value }));
   };
 
+  const getCounterColor = (len: number, max: number) => {
+    if (len > max) return 'text-rose-400';
+    if (len >= max * 0.8) return 'text-amber-400';
+    return 'text-gray-500';
+  };
+
   const handleGenerateCopy = () => {
     // Simulating AI generation
     setAd(prev => ({
@@ -60,9 +66,14 @@ export const AdCreator: React.FC<Props> = ({ onSave, initialData }) => {
           </div>
 
           <div>
-            <label className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block mb-1.5 flex items-center gap-1.5">
-              <Type className="w-3 h-3" /> Primary Text (Body)
-            </label>
+            <div className="flex items-center justify-between mb-1.5">
+              <label className="text-[10px] font-bold text-gray-400 uppercase tracking-wider flex items-center gap-1.5">
+                <Type className="w-3 h-3" /> Primary Text (Body)
+              </label>
+              <span className={`text-[10px] font-mono font-bold ${getCounterColor((ad.body || '').length, 125)}`}>
+                {(ad.body || '').length}/125
+              </span>
+            </div>
             <textarea
               name="body"
               rows={4}
@@ -74,7 +85,12 @@ export const AdCreator: React.FC<Props> = ({ onSave, initialData }) => {
           </div>
 
           <div>
-            <label className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block mb-1.5">Headline</label>
+            <div className="flex items-center justify-between mb-1.5">
+              <label className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Headline</label>
+              <span className={`text-[10px] font-mono font-bold ${getCounterColor((ad.headline || '').length, 40)}`}>
+                {(ad.headline || '').length}/40
+              </span>
+            </div>
             <input
               name="headline"
               value={ad.headline}
