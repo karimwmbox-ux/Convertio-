@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { MetaAd } from '../types';
 import { AdPreview } from './AdPreview';
-import { Wand2, Image as ImageIcon, Layout, Type } from 'lucide-react';
+import { Wand2, Image as ImageIcon, Layout, Type, RefreshCw } from 'lucide-react';
 
 interface Props {
   onSave: (ad: Partial<MetaAd>) => void;
@@ -22,13 +22,20 @@ export const AdCreator: React.FC<Props> = ({ onSave, initialData }) => {
     setAd(prev => ({ ...prev, [name]: value }));
   };
 
+  const [isGenerating, setIsGenerating] = useState(false);
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  useEffect(() => () => { if (timerRef.current) clearTimeout(timerRef.current); }, []);
+
   const handleGenerateCopy = () => {
-    // Simulating AI generation
-    setAd(prev => ({
-      ...prev,
-      headline: "The Future of Professional Gear.",
-      body: "Experience unmatched quality and design. Our latest collection is engineered for those who demand excellence in every detail. Limited stock available."
-    }));
+    setIsGenerating(true);
+    timerRef.current = setTimeout(() => {
+      setAd(prev => ({
+        ...prev,
+        headline: "The Future of Professional Gear.",
+        body: "Experience unmatched quality and design. Our latest collection is engineered for those who demand excellence in every detail. Limited stock available."
+      }));
+      setIsGenerating(false);
+    }, 800);
   };
 
   return (
@@ -41,16 +48,20 @@ export const AdCreator: React.FC<Props> = ({ onSave, initialData }) => {
           </h3>
           <button
             onClick={handleGenerateCopy}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-[10px] font-bold text-indigo-400 hover:bg-indigo-500/20 transition-all"
+            disabled={isGenerating}
+            aria-label="Magic Generate AI copy"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-[10px] font-bold text-indigo-400 hover:bg-indigo-500/20 disabled:opacity-50 transition-all cursor-pointer"
           >
-            <Wand2 className="w-3 h-3" /> Magic Generate
+            {isGenerating ? <RefreshCw className="w-3 h-3 animate-spin" /> : <Wand2 className="w-3 h-3" />}
+            {isGenerating ? 'Generating...' : 'Magic Generate'}
           </button>
         </div>
 
         <div className="space-y-4">
           <div>
-            <label className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block mb-1.5">Ad Name</label>
+            <label htmlFor="ad-name" className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block mb-1.5 cursor-pointer">Ad Name</label>
             <input
+              id="ad-name"
               name="name"
               value={ad.name}
               onChange={handleChange}
@@ -60,10 +71,14 @@ export const AdCreator: React.FC<Props> = ({ onSave, initialData }) => {
           </div>
 
           <div>
-            <label className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block mb-1.5 flex items-center gap-1.5">
-              <Type className="w-3 h-3" /> Primary Text (Body)
-            </label>
+            <div className="flex justify-between items-center mb-1.5">
+              <label htmlFor="ad-body" className="text-[10px] font-bold text-gray-400 uppercase tracking-wider flex items-center gap-1.5 cursor-pointer">
+                <Type className="w-3 h-3" /> Primary Text (Body)
+              </label>
+              <span className={`text-[10px] font-mono ${(ad.body?.length || 0) > 125 ? 'text-red-400' : 'text-gray-500'}`}>{ad.body?.length || 0}/125</span>
+            </div>
             <textarea
+              id="ad-body"
               name="body"
               rows={4}
               value={ad.body}
@@ -74,8 +89,12 @@ export const AdCreator: React.FC<Props> = ({ onSave, initialData }) => {
           </div>
 
           <div>
-            <label className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block mb-1.5">Headline</label>
+            <div className="flex justify-between items-center mb-1.5">
+              <label htmlFor="ad-headline" className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block cursor-pointer">Headline</label>
+              <span className={`text-[10px] font-mono ${(ad.headline?.length || 0) > 40 ? 'text-red-400' : 'text-gray-500'}`}>{ad.headline?.length || 0}/40</span>
+            </div>
             <input
+              id="ad-headline"
               name="headline"
               value={ad.headline}
               onChange={handleChange}
@@ -86,8 +105,9 @@ export const AdCreator: React.FC<Props> = ({ onSave, initialData }) => {
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block mb-1.5">Call to Action</label>
+              <label htmlFor="ad-cta" className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block mb-1.5 cursor-pointer">Call to Action</label>
               <select
+                id="ad-cta"
                 name="cta"
                 value={ad.cta}
                 onChange={handleChange}
@@ -100,10 +120,11 @@ export const AdCreator: React.FC<Props> = ({ onSave, initialData }) => {
               </select>
             </div>
             <div>
-              <label className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block mb-1.5 flex items-center gap-1.5">
+              <label htmlFor="ad-image-url" className="text-[10px] font-bold text-gray-400 uppercase tracking-wider flex items-center gap-1.5 mb-1.5 cursor-pointer">
                 <ImageIcon className="w-3 h-3" /> Image URL
               </label>
               <input
+                id="ad-image-url"
                 name="imageUrl"
                 value={ad.imageUrl}
                 onChange={handleChange}
