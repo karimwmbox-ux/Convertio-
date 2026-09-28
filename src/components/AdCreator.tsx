@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useId } from 'react';
 import { MetaAd } from '../types';
 import { AdPreview } from './AdPreview';
 import { Wand2, Image as ImageIcon, Layout, Type } from 'lucide-react';
@@ -16,6 +16,9 @@ export const AdCreator: React.FC<Props> = ({ onSave, initialData }) => {
     cta: 'Learn More',
     imageUrl: ''
   });
+
+  const baseId = useId();
+  const getCharColor = (len: number, max: number) => len > max ? 'text-red-400 font-black' : len >= max * 0.8 ? 'text-amber-400' : 'text-gray-500';
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -49,8 +52,9 @@ export const AdCreator: React.FC<Props> = ({ onSave, initialData }) => {
 
         <div className="space-y-4">
           <div>
-            <label className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block mb-1.5">Ad Name</label>
+            <label htmlFor={`${baseId}-name`} className="text-[10px] font-bold text-gray-400 uppercase tracking-wider cursor-pointer block mb-1.5">Ad Name</label>
             <input
+              id={`${baseId}-name`}
               name="name"
               value={ad.name}
               onChange={handleChange}
@@ -60,10 +64,16 @@ export const AdCreator: React.FC<Props> = ({ onSave, initialData }) => {
           </div>
 
           <div>
-            <label className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block mb-1.5 flex items-center gap-1.5">
-              <Type className="w-3 h-3" /> Primary Text (Body)
-            </label>
+            <div className="flex justify-between items-center mb-1.5">
+              <label htmlFor={`${baseId}-body`} className="text-[10px] font-bold text-gray-400 uppercase tracking-wider cursor-pointer flex items-center gap-1.5">
+                <Type className="w-3 h-3" /> Primary Text (Body)
+              </label>
+              <span className={`text-[10px] font-bold ${getCharColor(ad.body?.length || 0, 125)}`}>
+                {ad.body?.length || 0}/125
+              </span>
+            </div>
             <textarea
+              id={`${baseId}-body`}
               name="body"
               rows={4}
               value={ad.body}
@@ -74,8 +84,14 @@ export const AdCreator: React.FC<Props> = ({ onSave, initialData }) => {
           </div>
 
           <div>
-            <label className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block mb-1.5">Headline</label>
+            <div className="flex justify-between items-center mb-1.5">
+              <label htmlFor={`${baseId}-headline`} className="text-[10px] font-bold text-gray-400 uppercase tracking-wider cursor-pointer block">Headline</label>
+              <span className={`text-[10px] font-bold ${getCharColor(ad.headline?.length || 0, 40)}`}>
+                {ad.headline?.length || 0}/40
+              </span>
+            </div>
             <input
+              id={`${baseId}-headline`}
               name="headline"
               value={ad.headline}
               onChange={handleChange}
@@ -86,8 +102,9 @@ export const AdCreator: React.FC<Props> = ({ onSave, initialData }) => {
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block mb-1.5">Call to Action</label>
+              <label htmlFor={`${baseId}-cta`} className="text-[10px] font-bold text-gray-400 uppercase tracking-wider cursor-pointer block mb-1.5">Call to Action</label>
               <select
+                id={`${baseId}-cta`}
                 name="cta"
                 value={ad.cta}
                 onChange={handleChange}
@@ -100,10 +117,11 @@ export const AdCreator: React.FC<Props> = ({ onSave, initialData }) => {
               </select>
             </div>
             <div>
-              <label className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block mb-1.5 flex items-center gap-1.5">
+              <label htmlFor={`${baseId}-imageUrl`} className="text-[10px] font-bold text-gray-400 uppercase tracking-wider cursor-pointer flex items-center gap-1.5 mb-1.5">
                 <ImageIcon className="w-3 h-3" /> Image URL
               </label>
               <input
+                id={`${baseId}-imageUrl`}
                 name="imageUrl"
                 value={ad.imageUrl}
                 onChange={handleChange}
