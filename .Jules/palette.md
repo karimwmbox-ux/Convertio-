@@ -1,0 +1,3 @@
+## 2026-10-08 - Accessible Form Labels & Async Feedback Pattern in AdCreator
+**Learning:** In complex form components, unassociated form labels hinder accessibility and click targets for screen reader and keyboard users. Additionally, instant AI generation without loading state feedback feels abrupt and leaves users uncertain if an operation took effect.
+**Action:** Always link form labels to their inputs using React's `useId()` hook for unique `htmlFor`/`id` pairs, add `cursor-pointer` to labels, and introduce an artificial delay with spinning loading state (`RefreshCw`, continuous label, `disabled` state) for async/magic AI actions.
