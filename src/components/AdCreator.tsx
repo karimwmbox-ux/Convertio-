@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useId } from 'react';
 import { MetaAd } from '../types';
 import { AdPreview } from './AdPreview';
 import { Wand2, Image as ImageIcon, Layout, Type } from 'lucide-react';
@@ -9,12 +9,14 @@ interface Props {
 }
 
 export const AdCreator: React.FC<Props> = ({ onSave, initialData }) => {
-  const [ad, setAd] = useState<Partial<MetaAd>>(initialData || {
+  const baseId = useId();
+  const [ad, setAd] = useState<Partial<MetaAd>>({
     name: '',
     headline: '',
     body: '',
     cta: 'Learn More',
-    imageUrl: ''
+    imageUrl: '',
+    ...initialData
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
@@ -60,10 +62,16 @@ export const AdCreator: React.FC<Props> = ({ onSave, initialData }) => {
           </div>
 
           <div>
-            <label className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block mb-1.5 flex items-center gap-1.5">
-              <Type className="w-3 h-3" /> Primary Text (Body)
-            </label>
+            <div className="flex justify-between items-center mb-1.5">
+              <label htmlFor={`${baseId}-body`} className="text-[10px] font-bold text-gray-400 uppercase tracking-wider flex items-center gap-1.5 cursor-pointer">
+                <Type className="w-3 h-3" /> Primary Text (Body)
+              </label>
+              <span className={`text-[10px] font-mono ${(ad.body?.length || 0) > 125 ? 'text-red-400 font-bold' : (ad.body?.length || 0) >= 100 ? 'text-amber-400' : 'text-gray-500'}`}>
+                {ad.body?.length || 0}/125
+              </span>
+            </div>
             <textarea
+              id={`${baseId}-body`}
               name="body"
               rows={4}
               value={ad.body}
@@ -74,8 +82,14 @@ export const AdCreator: React.FC<Props> = ({ onSave, initialData }) => {
           </div>
 
           <div>
-            <label className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block mb-1.5">Headline</label>
+            <div className="flex justify-between items-center mb-1.5">
+              <label htmlFor={`${baseId}-headline`} className="text-[10px] font-bold text-gray-400 uppercase tracking-wider cursor-pointer">Headline</label>
+              <span className={`text-[10px] font-mono ${(ad.headline?.length || 0) > 40 ? 'text-red-400 font-bold' : (ad.headline?.length || 0) >= 32 ? 'text-amber-400' : 'text-gray-500'}`}>
+                {ad.headline?.length || 0}/40
+              </span>
+            </div>
             <input
+              id={`${baseId}-headline`}
               name="headline"
               value={ad.headline}
               onChange={handleChange}
